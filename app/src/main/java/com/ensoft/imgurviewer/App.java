@@ -9,11 +9,13 @@ import com.ensoft.imgurviewer.service.ProxyUtils;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.restafari.network.service.RequestService;
 import com.ensoft.restafari.network.service.RequestServiceOptions;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.fresco.FrescoImageLoader;
+import okhttp3.OkHttpClient;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -65,7 +67,8 @@ public class App extends Application
 				networkFetcher = new HttpUrlConnectionNetworkFetcher( UriUtils.getDefaultUserAgent(), HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT );
 			}
 			
-			ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this )
+			OkHttpClient okHttpClient = new OkHttpClient();
+			ImagePipelineConfig config = OkHttpImagePipelineConfigFactory.newBuilder(this, okHttpClient)
 				.setNetworkFetcher( networkFetcher ).build();
 			
 			BigImageViewer.initialize( FrescoImageLoader.with( this, config ) );
